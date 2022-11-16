@@ -60,18 +60,16 @@ variable "vm_tags" {
   default     = []
 }
 
-variable "validator_slugs" {
-  type    = list(string)
-  default = []
+variable "full_nodes" {
+  description = "Slug of the non validator full nodes."
+  type        = list(string)
+  default     = []
 }
 
-
-# Map the validator to the instance name
-# TODO: this is more to demo validator specific setting, but in fact it just changes
-# the compute instance name. Later the compute instance name will simply be derived from
-# the slug, but validator moniker could be specifically overridden.
-variable "validator_slug_to_validator_name_map" {
-  type = map(string)
+variable "validator_nodes" {
+  description = "Slug of the nodes that will perform validation."
+  type        = list(string)
+  default     = []
 }
 
 variable "default_chain_id" {
@@ -89,4 +87,5 @@ locals {
   prefix      = "${var.prefix}-${local.environment}"
   image_name  = "canto-validator-${local.environment}"
   chain_id    = lookup(var.environment_to_chain_id, local.environment, var.default_chain_id)
+  all_nodes   = concat(var.validator_nodes, var.full_nodes)
 }
