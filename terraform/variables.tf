@@ -54,10 +54,16 @@ variable "create_firewall_rule" {
   default     = false
 }
 
-variable "vm_tags" {
-  description = "Additional network tags for the instances."
+variable "nodes_vm_tags" {
+  description = "Additional network tags for the nodes instances."
   type        = list(string)
-  default     = []
+  default     = ["tendermint-p2p", "tendermint-api", "tendermint-rpc"]
+}
+
+variable "validators_vm_tags" {
+  description = "Additional network tags for the validators instances."
+  type        = list(string)
+  default     = ["tendermint-p2p"]
 }
 
 variable "full_nodes" {
@@ -81,6 +87,35 @@ variable "environment_to_chain_id" {
   type = map(string)
 }
 
+variable "tendermint_p2p_port" {
+  description = "Port for interacting with the p2p Tendermint network."
+  type        = number
+  default     = 26656
+}
+
+variable "tendermint_rpc_port" {
+  description = "Port Tendermint RPC will listen on."
+  type        = number
+  default     = 26657
+}
+
+variable "tendermint_api_port" {
+  description = "Port for interacting with the REST API."
+  type        = number
+  default     = 1317
+}
+
+variable "node_domain_suffix" {
+  description = "Used for the certificate, node domain will be <node>.<node_domain_suffix>"
+  type        = string
+  default     = ""
+}
+
+variable "create_reverse_proxy" {
+  description = "Setup a reverse proxy in front of the node (useful for getting the REST API over SSL)."
+  type        = bool
+  default     = false
+}
 
 locals {
   environment = terraform.workspace

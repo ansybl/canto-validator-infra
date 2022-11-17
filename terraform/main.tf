@@ -45,16 +45,17 @@ module "gce_worker_container" {
     TENDERMINT_KEYFILE      = contains(var.validator_nodes, each.key) ? replace(data.google_secret_manager_secret_version.tendermint_keyfile[each.key].secret_data, "\n", "\\n") : ""
     PASSPHRASE              = contains(var.validator_nodes, each.key) ? data.google_secret_manager_secret_version.passphrase[each.key].secret_data : ""
     PRIV_VALIDATOR_KEY      = contains(var.validator_nodes, each.key) ? replace(data.google_secret_manager_secret_version.priv_validator_key[each.key].secret_data, "\n", "\\n") : ""
+    API                     = contains(var.full_nodes, each.key) ? "true" : "false"
+    UNSAFE_CORS             = contains(var.full_nodes, each.key) ? "true" : "false"
+    API_PORT                = var.tendermint_api_port
+    P2P_PORT                = var.tendermint_p2p_port
+    RPC_PORT                = var.tendermint_rpc_port
   }
   instance_name        = "${each.key}-${var.environment}"
   network_name         = "default"
   create_firewall_rule = var.create_firewall_rule
-  vm_tags              = var.vm_tags
+  vm_tags              = contains(var.validator_nodes, each.key) ? var.validators_vm_tags : var.nodes_vm_tags
   # This has the permission to download images from Container Registry
   client_email = var.client_email
   ssh_keys     = var.ssh_keys
-}
-
-output "google_compute_instance_ip" {
-  value = values(module.gce_worker_container).*.google_compute_instance_ip
 }

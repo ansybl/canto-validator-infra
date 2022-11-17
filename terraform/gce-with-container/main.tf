@@ -52,7 +52,9 @@ resource "google_compute_instance" "this" {
   network_interface {
     network = var.network_name
 
-    access_config {}
+    access_config {
+      nat_ip = google_compute_address.static.address
+    }
   }
 
   metadata = {
@@ -69,33 +71,5 @@ resource "google_compute_instance" "this" {
     scopes = [
       "https://www.googleapis.com/auth/cloud-platform",
     ]
-  }
-}
-
-resource "google_compute_firewall" "allow_tag_tendermint_p2p" {
-  count       = var.create_firewall_rule ? 1 : 0
-  name        = "${local.prefix}${local.instance_name}-ingress-tag-p2p"
-  description = "Ingress to allow Tendermint P2P ports to machines with the 'tendermint-p2p' tag"
-  network = var.network_name
-  source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["tendermint-p2p"]
-
-  allow {
-    protocol = "tcp"
-    ports    = [var.tendermint_p2p_port]
-  }
-}
-
-resource "google_compute_firewall" "allow_tag_tendermint_rpc" {
-  count       = var.create_firewall_rule ? 1 : 0
-  name        = "${local.prefix}${local.instance_name}-ingress-tag-rpc"
-  description = "Ingress to allow Tendermint RPC ports to machines with the 'tendermint-rpc' tag"
-  network = var.network_name
-  source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["tendermint-rpc"]
-
-  allow {
-    protocol = "tcp"
-    ports    = [var.tendermint_rpc_port]
   }
 }
