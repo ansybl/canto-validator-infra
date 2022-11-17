@@ -24,7 +24,7 @@ resource "google_storage_bucket" "default" {
 }
 
 module "gce_worker_container" {
-  for_each        = toset(var.validator_slugs)
+  for_each        = toset(local.all_nodes)
   source          = "./gce-with-container"
   image           = "gcr.io/${var.project}/${local.image_name}:${var.image_tag}"
   privileged_mode = true
@@ -42,12 +42,11 @@ module "gce_worker_container" {
     PERSISTENT_PEERS        = "16ca056442ffcfe509cee9be37817370599dcee1@147.182.255.149:26656,16ca056442ffcfe509cee9be37817370599dcee1@147.182.255.149:26656"
     RPC_SERVERS             = "147.182.255.149:26657,147.182.255.149:26657"
     ADDITIONAL_DEPENDENCIES = "jq tmux vim"
-    TENDERMINT_KEYFILE      = replace(data.google_secret_manager_secret_version.tendermint_keyfile[each.key].secret_data, "\n", "\\n")
-    MNEMONIC                = data.google_secret_manager_secret_version.mnemonic[each.key].secret_data
-    PASSPHRASE              = data.google_secret_manager_secret_version.passphrase[each.key].secret_data
-    PRIV_VALIDATOR_KEY      = replace(data.google_secret_manager_secret_version.priv_validator_key[each.key].secret_data, "\n", "\\n")
+    TENDERMINT_KEYFILE      = contains(var.validator_nodes, each.key) ? replace(data.google_secret_manager_secret_version.tendermint_keyfile[each.key].secret_data, "\n", "\\n") : ""
+    PASSPHRASE              = contains(var.validator_nodes, each.key) ? data.google_secret_manager_secret_version.passphrase[each.key].secret_data : ""
+    PRIV_VALIDATOR_KEY      = contains(var.validator_nodes, each.key) ? replace(data.google_secret_manager_secret_version.priv_validator_key[each.key].secret_data, "\n", "\\n") : ""
   }
-  instance_name        = "${lookup(var.validator_slug_to_validator_name_map, each.key, each.key)}-${var.environment}"
+  instance_name        = "${each.key}-${var.environment}"
   network_name         = "default"
   create_firewall_rule = var.create_firewall_rule
   vm_tags              = var.vm_tags

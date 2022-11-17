@@ -47,7 +47,7 @@ devops/terraform/destroy/%: devops/terraform/select/$(WORKSPACE)
 	terraform -chdir=terraform destroy -target=module.gce_worker_container[\"$*\"].google_compute_instance.this -auto-approve
 
 # only redeploy the VM
-devops/terraform/redeploy/all: devops/terraform/select/$(WORKSPACE) devops/terraform/destroy/validator1 devops/terraform/destroy/customer2
+devops/terraform/redeploy/all: devops/terraform/select/$(WORKSPACE) devops/terraform/destroy/validator1 devops/terraform/destroy/full-node1 devops/terraform/destroy/full-node2
 	make devops/terraform/apply
 
 devops/terraform/output/google_compute_instance_ip: devops/terraform/select/$(WORKSPACE)

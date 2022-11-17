@@ -16,6 +16,10 @@ write_app_toml() {
 }
 
 import_keys() {
+    # non validator would not have these variables set
+    if [[ -z "$PRIV_VALIDATOR_KEY" ]]; then
+        return
+    fi
     KEYFILE_PATH=/tmp/tendermint-keyfile.txt
     echo -e $TENDERMINT_KEYFILE > $KEYFILE_PATH
     cantod keys import main $KEYFILE_PATH <<EOF
