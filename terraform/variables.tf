@@ -117,6 +117,42 @@ variable "create_reverse_proxy" {
   default     = false
 }
 
+variable "bootstrap" {
+  type    = bool
+  default = true
+}
+
+variable "state_sync_enable" {
+  type    = bool
+  default = true
+}
+
+variable "trust_height" {
+  type = number
+}
+
+variable "trust_hash" {
+  type = string
+}
+
+variable "minimum_gas_prices" {
+  type    = string
+  default = "0.0001acanto"
+}
+
+variable "persistent_peers" {
+  type = string
+}
+
+variable "rpc_servers" {
+  type = string
+}
+
+variable "additional_dependencies" {
+  type = string
+}
+
+
 locals {
   environment = terraform.workspace
   prefix      = "${var.prefix}-${local.environment}"

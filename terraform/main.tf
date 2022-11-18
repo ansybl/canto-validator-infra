@@ -35,13 +35,13 @@ module "gce_worker_container" {
     BOOTSTRAP         = "true"
     STATE_SYNC_ENABLE = "true"
     # TODO: make it dynamic
-    TRUST_HEIGHT            = 1895000
-    TRUST_HASH              = "e03a1b6455da75269576ee3c31ccbf419c2f6408ad68bbb37e07898d4d2d3d77"
-    MINIMUM_GAS_PRICES      = "0.0001acanto"
+    TRUST_HEIGHT            = var.trust_height
+    TRUST_HASH              = var.trust_hash
+    MINIMUM_GAS_PRICES      = var.minimum_gas_prices
     CHAIN_ID                = local.chain_id
-    PERSISTENT_PEERS        = "16ca056442ffcfe509cee9be37817370599dcee1@147.182.255.149:26656,16ca056442ffcfe509cee9be37817370599dcee1@147.182.255.149:26656"
-    RPC_SERVERS             = "147.182.255.149:26657,147.182.255.149:26657"
-    ADDITIONAL_DEPENDENCIES = "jq tmux vim"
+    PERSISTENT_PEERS        = var.persistent_peers
+    RPC_SERVERS             = var.rpc_servers
+    ADDITIONAL_DEPENDENCIES = var.additional_dependencies
     TENDERMINT_KEYFILE      = contains(var.validator_nodes, each.key) ? replace(data.google_secret_manager_secret_version.tendermint_keyfile[each.key].secret_data, "\n", "\\n") : ""
     PASSPHRASE              = contains(var.validator_nodes, each.key) ? data.google_secret_manager_secret_version.passphrase[each.key].secret_data : ""
     PRIV_VALIDATOR_KEY      = contains(var.validator_nodes, each.key) ? replace(data.google_secret_manager_secret_version.priv_validator_key[each.key].secret_data, "\n", "\\n") : ""
