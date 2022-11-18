@@ -32,6 +32,12 @@ variable "tendermint_rpc_port" {
   default     = 26657
 }
 
+variable "tendermint_api_port" {
+  description = "Port for interacting with the REST API."
+  type        = number
+  default     = 1317
+}
+
 variable "instance_name" {
   description = "The desired name to assign to the deployed instance"
   default = "disk-instance-vm-test"
