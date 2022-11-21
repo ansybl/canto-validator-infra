@@ -26,8 +26,8 @@ environment_to_chain_id = {
   mainnet = "canto_7700-1"
 }
 
-trust_height            = 1895000
-trust_hash              = "e03a1b6455da75269576ee3c31ccbf419c2f6408ad68bbb37e07898d4d2d3d77"
+trust_height            = 1987000
+trust_hash              = "FE48B1199C368FBEC11C785830385CCFBF300B7019068939E4A287AFC99065AB"
 persistent_peers        = "16ca056442ffcfe509cee9be37817370599dcee1@147.182.255.149:26656,16ca056442ffcfe509cee9be37817370599dcee1@147.182.255.149:26656"
 rpc_servers             = "147.182.255.149:26657,147.182.255.149:26657"
 additional_dependencies = "jq tmux vim"

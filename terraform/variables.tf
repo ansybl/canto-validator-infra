@@ -100,6 +100,12 @@ variable "tendermint_api_port" {
   default     = 1317
 }
 
+variable "tendermint_evm_rpc_port" {
+  description = "Port for interacting with the EVM RPC server."
+  type        = number
+  default     = 8545
+}
+
 variable "node_domain_suffix" {
   description = "Used for the certificate, node domain will be <node>.<node_domain_suffix>"
   type        = string

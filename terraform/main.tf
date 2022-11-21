@@ -56,10 +56,14 @@ module "gce_worker_container" {
     P2P_PORT                = var.tendermint_p2p_port
     RPC_PORT                = var.tendermint_rpc_port
   }
-  instance_name        = each.key
-  network_name         = "default"
-  create_firewall_rule = var.create_firewall_rule
-  vm_tags              = contains(var.validator_nodes, each.key) ? var.validators_vm_tags : var.nodes_vm_tags
+  instance_name           = each.key
+  network_name            = "default"
+  create_firewall_rule    = var.create_firewall_rule
+  tendermint_api_port     = var.tendermint_api_port
+  tendermint_p2p_port     = var.tendermint_p2p_port
+  tendermint_rpc_port     = var.tendermint_rpc_port
+  tendermint_evm_rpc_port = var.tendermint_evm_rpc_port
+  vm_tags                 = contains(var.validator_nodes, each.key) ? var.validators_vm_tags : var.nodes_vm_tags
   # This has the permission to download images from Container Registry
   client_email = var.client_email
   ssh_keys     = var.ssh_keys

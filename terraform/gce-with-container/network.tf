@@ -1,7 +1,3 @@
-resource "google_compute_address" "static" {
-  name = "${var.prefix}-${local.instance_name}-ipv4-address-${var.environment}"
-}
-
 resource "google_compute_firewall" "allow_tag_tendermint_p2p" {
   count       = var.create_firewall_rule ? 1 : 0
   name        = "${var.prefix}-${local.instance_name}-ingress-tag-p2p-${var.environment}"
