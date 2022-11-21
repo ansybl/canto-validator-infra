@@ -24,11 +24,6 @@ variable "zone" {
 
 ## validator variables
 
-variable "environment" {
-  type    = string
-  default = "dev"
-}
-
 variable "machine_type" {
   type = string
 }
@@ -155,7 +150,6 @@ variable "additional_dependencies" {
 
 locals {
   environment      = terraform.workspace
-  prefix           = "${var.prefix}-${local.environment}"
   canto_image_name = "canto-validator-${local.environment}"
   nginx_image_name = "nginx-reverse-proxy-${local.environment}"
   chain_id         = lookup(var.environment_to_chain_id, local.environment, var.default_chain_id)

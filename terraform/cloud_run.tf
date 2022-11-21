@@ -1,6 +1,6 @@
 resource "google_cloud_run_service" "nginx_reverse_proxy" {
   for_each = var.create_reverse_proxy ? toset(var.full_nodes) : []
-  name     = "${local.prefix}-nginx-reverse-proxy-${each.key}-${local.environment}"
+  name     = "${var.prefix}-nginx-reverse-proxy-${each.key}-${local.environment}"
   location = var.region
 
   template {
