@@ -57,7 +57,7 @@ variable "create_firewall_rule" {
 variable "nodes_vm_tags" {
   description = "Additional network tags for the nodes instances."
   type        = list(string)
-  default     = ["tendermint-p2p", "tendermint-api", "tendermint-rpc"]
+  default     = ["tendermint-p2p", "tendermint-api", "tendermint-rpc", "tendermint-evm-rpc"]
 }
 
 variable "validators_vm_tags" {

@@ -38,6 +38,12 @@ variable "tendermint_api_port" {
   default     = 1317
 }
 
+variable "tendermint_evm_rpc_port" {
+  description = "Port for interacting with the EVM RPC server."
+  type        = number
+  default     = 8545
+}
+
 variable "instance_name" {
   description = "The desired name to assign to the deployed instance"
   default = "disk-instance-vm-test"

@@ -43,3 +43,17 @@ resource "google_compute_firewall" "allow_tag_tendermint_api" {
     ports    = [var.tendermint_api_port]
   }
 }
+
+resource "google_compute_firewall" "allow_tag_tendermint_evm_rpc" {
+  count       = var.create_firewall_rule ? 1 : 0
+  name        = "${local.prefix}${local.instance_name}-ingress-tag-evm-rpc"
+  description = "Ingress to allow Tendermint EVM RPC ports to machines with the 'tendermint-evm-rpc' tag"
+  network = var.network_name
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["tendermint-evm-rpc"]
+
+  allow {
+    protocol = "tcp"
+    ports    = [var.tendermint_evm_rpc_port]
+  }
+}
