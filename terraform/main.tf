@@ -23,10 +23,14 @@ resource "google_storage_bucket" "default" {
   }
 }
 
+resource "google_project_service" "cloud_run_api" {
+  service = "run.googleapis.com"
+}
+
 module "gce_worker_container" {
   for_each        = toset(local.all_nodes)
   source          = "./gce-with-container"
-  image           = "gcr.io/${var.project}/${local.image_name}:${var.image_tag}"
+  image           = "gcr.io/${var.project}/${local.canto_image_name}:${var.image_tag}"
   privileged_mode = true
   activate_tty    = true
   machine_type    = var.machine_type
