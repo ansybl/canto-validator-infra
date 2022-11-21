@@ -2,27 +2,39 @@ IMAGE_TAG=latest
 PROJECT=dfpl-playground
 REGISTRY=gcr.io/$(PROJECT)
 WORKSPACE?=dev-testnet
-IMAGE_NAME=canto-validator-$(WORKSPACE)
-DOCKER_IMAGE=$(REGISTRY)/$(IMAGE_NAME)
+CANTO_IMAGE_NAME=canto-validator-$(WORKSPACE)
+CANTO_DOCKER_IMAGE=$(REGISTRY)/$(CANTO_IMAGE_NAME)
+NGINX_IMAGE_NAME=nginx-reverse-proxy-$(WORKSPACE)
+NGINX_DOCKER_IMAGE=$(REGISTRY)/$(NGINX_IMAGE_NAME)
 ifndef CI
 DOCKER_IT=-it
 endif
 
 
-docker/build:
-	docker build --tag=$(DOCKER_IMAGE):$(IMAGE_TAG) .
+docker/build/canto:
+	cd docker/canto && docker build --tag=$(CANTO_DOCKER_IMAGE):$(IMAGE_TAG) .
+
+docker/build/nginx:
+	cd docker/nginx && docker build --tag=$(NGINX_DOCKER_IMAGE):$(IMAGE_TAG) .
+
+docker/build: docker/build/canto docker/build/nginx
 
 docker/login:
 	gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://gcr.io
 
-docker/push:
-	docker push $(DOCKER_IMAGE):$(IMAGE_TAG)
+docker/push/canto:
+	docker push $(CANTO_DOCKER_IMAGE):$(IMAGE_TAG)
+
+docker/push/nginx:
+	docker push $(NGINX_DOCKER_IMAGE):$(IMAGE_TAG)
+
+docker/push: docker/push/canto docker/push/nginx
 
 docker/run:
-	docker run $(DOCKER_IT) --rm $(DOCKER_IMAGE)
+	docker run $(DOCKER_IT) --rm $(CANTO_DOCKER_IMAGE)
 
 docker/run/sh:
-	docker run $(DOCKER_IT) --entrypoint /bin/sh --rm $(DOCKER_IMAGE)
+	docker run $(DOCKER_IT) --entrypoint /bin/sh --rm $(CANTO_DOCKER_IMAGE)
 
 devops/terraform/select/%:
 	terraform -chdir=terraform workspace select $* || terraform -chdir=terraform workspace new $*
