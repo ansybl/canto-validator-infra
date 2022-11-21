@@ -11,8 +11,16 @@ resource "google_cloud_run_service" "nginx_reverse_proxy" {
           container_port = 80
         }
         env {
-          name  = "PROXY_PASS_URL"
-          value = "http://${module.gce_worker_container[each.key].google_compute_instance_ip}:${var.tendermint_api_port}"
+          name  = "PROXY_PASS_API_URL"
+          value = "http://${module.gce_worker_container[each.key].google_compute_instance_ip}:${var.tendermint_api_port}/"
+        }
+        env {
+          name  = "PROXY_PASS_RPC_URL"
+          value = "http://${module.gce_worker_container[each.key].google_compute_instance_ip}:${var.tendermint_rpc_port}/"
+        }
+        env {
+          name  = "PROXY_PASS_EVM_RPC_URL"
+          value = "http://${module.gce_worker_container[each.key].google_compute_instance_ip}:${var.tendermint_evm_rpc_port}/"
         }
       }
     }
