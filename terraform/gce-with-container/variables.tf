@@ -1,7 +1,10 @@
 variable "prefix" {
   description = "Prefix to prepend to resource names."
   type        = string
-  default     = ""
+}
+
+variable "environment" {
+  type        = string
 }
 
 variable "network_name" {

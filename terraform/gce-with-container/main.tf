@@ -6,8 +6,6 @@ locals {
     name = var_name
     value = var_value
   }]
-
-  prefix     = var.prefix == "" ? "" : "${var.prefix}-"
 }
 
 ####################
@@ -35,7 +33,8 @@ module "gce-container" {
 ##### COMPUTE ENGINE
 
 resource "google_compute_instance" "this" {
-  name = "${local.prefix}${local.instance_name}"
+  # TODO
+  name = "${var.prefix}-${local.instance_name}-${var.environment}"
   machine_type = var.machine_type
   # If true, allows Terraform to stop the instance to update its properties.
   allow_stopping_for_update = true

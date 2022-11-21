@@ -5,21 +5,21 @@ resource "google_project_service" "secretmanager" {
 
 data "google_secret_manager_secret_version" "tendermint_keyfile" {
   for_each   = toset(var.validator_nodes)
-  secret     = "${local.prefix}-${each.key}-tendermint-keyfile"
+  secret     = "${var.prefix}-${each.key}-tendermint-keyfile-${local.environment}"
   version    = "latest"
   depends_on = [google_project_service.secretmanager]
 }
 
 data "google_secret_manager_secret_version" "passphrase" {
   for_each   = toset(var.validator_nodes)
-  secret     = "${local.prefix}-${each.key}-passphrase"
+  secret     = "${var.prefix}-${each.key}-passphrase-${local.environment}"
   version    = "latest"
   depends_on = [google_project_service.secretmanager]
 }
 
 data "google_secret_manager_secret_version" "priv_validator_key" {
   for_each   = toset(var.validator_nodes)
-  secret     = "${local.prefix}-${each.key}-priv-validator-key"
+  secret     = "${var.prefix}-${each.key}-priv-validator-key-${local.environment}"
   version    = "latest"
   depends_on = [google_project_service.secretmanager]
 }

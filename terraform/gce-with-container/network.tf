@@ -1,10 +1,10 @@
 resource "google_compute_address" "static" {
-  name = "${local.prefix}${local.instance_name}-ipv4-address"
+  name = "${var.prefix}-${local.instance_name}-ipv4-address-${var.environment}"
 }
 
 resource "google_compute_firewall" "allow_tag_tendermint_p2p" {
   count       = var.create_firewall_rule ? 1 : 0
-  name        = "${local.prefix}${local.instance_name}-ingress-tag-p2p"
+  name        = "${var.prefix}-${local.instance_name}-ingress-tag-p2p-${var.environment}"
   description = "Ingress to allow Tendermint P2P ports to machines with the 'tendermint-p2p' tag"
   network = var.network_name
   source_ranges = ["0.0.0.0/0"]
@@ -18,7 +18,7 @@ resource "google_compute_firewall" "allow_tag_tendermint_p2p" {
 
 resource "google_compute_firewall" "allow_tag_tendermint_rpc" {
   count       = var.create_firewall_rule ? 1 : 0
-  name        = "${local.prefix}${local.instance_name}-ingress-tag-rpc"
+  name        = "${var.prefix}-${local.instance_name}-ingress-tag-rpc-${var.environment}"
   description = "Ingress to allow Tendermint RPC ports to machines with the 'tendermint-rpc' tag"
   network = var.network_name
   source_ranges = ["0.0.0.0/0"]
@@ -32,7 +32,7 @@ resource "google_compute_firewall" "allow_tag_tendermint_rpc" {
 
 resource "google_compute_firewall" "allow_tag_tendermint_api" {
   count       = var.create_firewall_rule ? 1 : 0
-  name        = "${local.prefix}${local.instance_name}-ingress-tag-api"
+  name        = "${var.prefix}-${local.instance_name}-ingress-tag-api-${var.environment}"
   description = "Ingress to allow Tendermint API ports to machines with the 'tendermint-api' tag"
   network = var.network_name
   source_ranges = ["0.0.0.0/0"]
@@ -46,7 +46,7 @@ resource "google_compute_firewall" "allow_tag_tendermint_api" {
 
 resource "google_compute_firewall" "allow_tag_tendermint_evm_rpc" {
   count       = var.create_firewall_rule ? 1 : 0
-  name        = "${local.prefix}${local.instance_name}-ingress-tag-evm-rpc"
+  name        = "${var.prefix}-${local.instance_name}-ingress-tag-evm-rpc-${var.environment}"
   description = "Ingress to allow Tendermint EVM RPC ports to machines with the 'tendermint-evm-rpc' tag"
   network = var.network_name
   source_ranges = ["0.0.0.0/0"]

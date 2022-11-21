@@ -8,10 +8,9 @@ region  = "us-central1"
 zone    = "us-central1-a"
 
 ## Validator setup
-environment = "dev"
 # gcloud compute machine-types list
 machine_type    = "e2-standard-4"
-prefix          = "canto"
+prefix          = "canto-validator"
 validator_nodes = ["validator1"]
 full_nodes      = ["node1", "node2"]
 ssh_keys = {

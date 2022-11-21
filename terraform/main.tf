@@ -34,7 +34,8 @@ module "gce_worker_container" {
   privileged_mode = true
   activate_tty    = true
   machine_type    = var.machine_type
-  prefix          = local.prefix
+  prefix          = var.prefix
+  environment     = local.environment
   env_variables = {
     BOOTSTRAP         = "true"
     STATE_SYNC_ENABLE = "true"
@@ -55,7 +56,7 @@ module "gce_worker_container" {
     P2P_PORT                = var.tendermint_p2p_port
     RPC_PORT                = var.tendermint_rpc_port
   }
-  instance_name        = "${each.key}-${var.environment}"
+  instance_name        = each.key
   network_name         = "default"
   create_firewall_rule = var.create_firewall_rule
   vm_tags              = contains(var.validator_nodes, each.key) ? var.validators_vm_tags : var.nodes_vm_tags
