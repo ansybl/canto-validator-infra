@@ -37,9 +37,8 @@ module "gce_worker_container" {
   prefix          = var.prefix
   environment     = local.environment
   env_variables = {
-    BOOTSTRAP         = "true"
-    STATE_SYNC_ENABLE = "true"
-    # TODO: make it dynamic
+    BOOTSTRAP               = var.bootstrap
+    STATE_SYNC_ENABLE       = var.state_sync_enable
     TRUST_HEIGHT            = var.trust_height
     TRUST_HASH              = var.trust_hash
     MINIMUM_GAS_PRICES      = var.minimum_gas_prices
