@@ -31,6 +31,22 @@ EOF
     echo -e $PRIV_VALIDATOR_KEY > $CANTOD_HOME/${PRIV_VALIDATOR_KEY_FILE:-config/priv_validator_key.json}
 }
 
+# retrieve and set trust height/height automatically if STATE_SYNC_ENABLE=true and TRUST_HEIGHT=0
+set_trusted_block() {
+    if [ "$STATE_SYNC_ENABLE" != "true" ] || [ $TRUST_HEIGHT -ne 0 ]; then
+        return
+    fi
+    if [[ -z "$RPC_SERVERS" ]]; then
+        echo "can't automatically TRUST_HEIGHT without RPC_SERVERS"
+        return
+    fi
+    RPC_SERVER=$(echo $RPC_SERVERS | cut -d , -f1)
+    LATEST_HEIGHT=$(curl -s $RPC_SERVER/block | jq -r .result.block.header.height); \
+    TRUST_HEIGHT=$((LATEST_HEIGHT - 2000)); \
+    TRUST_HASH=$(curl -s "$RPC_SERVER/block?height=$TRUST_HEIGHT" | jq -r .result.block_id.hash)
+    echo -e "LATEST_HEIGHT: $LATEST_HEIGHT\nTRUST_HEIGHT: $TRUST_HEIGHT\nTRUST_HASH: $TRUST_HASH"
+}
+
 compare_replace_config() {
     TARGET_FILE=$1
     TEMP_FILE=$2
@@ -102,6 +118,7 @@ add_system_dependencies() {
 }
 
 initialize "$CANTOD_HOME" cantod
+set_trusted_block
 update_config_files "$CANTOD_HOME/config"
 import_keys
 add_system_dependencies $ADDITIONAL_DEPENDENCIES

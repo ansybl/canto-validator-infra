@@ -106,12 +106,6 @@ variable "tendermint_evm_rpc_port" {
   default     = 8545
 }
 
-variable "node_domain_suffix" {
-  description = "Used for the certificate, node domain will be <node>.<node_domain_suffix>"
-  type        = string
-  default     = ""
-}
-
 variable "create_reverse_proxy" {
   description = "Setup a reverse proxy in front of the node (useful for getting the REST API over SSL)."
   type        = bool
@@ -129,11 +123,15 @@ variable "state_sync_enable" {
 }
 
 variable "trust_height" {
-  type = number
+  description = "Will be retrieved automatically at run time if state_sync_enable=true and trust_height=0"
+  type        = number
+  default     = 0
 }
 
 variable "trust_hash" {
-  type = string
+  description = "Will be retrieved automatically at run time if state_sync_enable=true and trust_height=0"
+  type        = string
+  default     = ""
 }
 
 variable "minimum_gas_prices" {

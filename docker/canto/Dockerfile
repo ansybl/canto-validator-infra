@@ -28,6 +28,8 @@ ENV CANTOD_HOME=/root/.cantod
 
 RUN apk add --no-cache --update \
     ca-certificates \
+    curl \
+    jq \
     supervisor
 
 COPY --from=buildenv /go/bin/cantod /tmp/

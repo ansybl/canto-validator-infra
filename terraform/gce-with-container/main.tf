@@ -50,6 +50,7 @@ resource "google_compute_instance" "this" {
 
   network_interface {
     network = var.network_name
+    access_config {}
   }
 
   metadata = {
