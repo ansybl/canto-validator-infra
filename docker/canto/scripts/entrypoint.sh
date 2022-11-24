@@ -85,7 +85,7 @@ initialize() {
 
     if [ ! -f "$NODE_DIR/config/genesis.json" ]; then
         echo "no existing genesis file found, initializing.."
-        $BINARY init "${MONIKER:-nonamenode}" --home="$NODE_DIR" --chain-id="${CHAIN_ID:-canto_740-1}"
+        $BINARY init "${MONIKER:-moniker}" --home="$NODE_DIR" --chain-id="${CHAIN_ID:-canto_740-1}"
         cd "$NODE_DIR/config"
         download_genesis
     fi

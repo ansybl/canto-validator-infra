@@ -13,6 +13,13 @@ provider "google" {
   zone        = var.zone
 }
 
+provider "google-beta" {
+  project     = var.project
+  credentials = file(var.credentials)
+  region      = var.region
+  zone        = var.zone
+}
+
 resource "google_storage_bucket" "default" {
   name          = "canto-validator-infra-bucket-tfstate"
   force_destroy = false
@@ -37,6 +44,7 @@ module "gce_worker_container" {
   prefix          = var.prefix
   environment     = local.environment
   env_variables = {
+    MONIKER                 = each.key
     BOOTSTRAP               = var.bootstrap
     STATE_SYNC_ENABLE       = var.state_sync_enable
     TRUST_HEIGHT            = var.trust_height

@@ -151,6 +151,16 @@ variable "additional_dependencies" {
   type = string
 }
 
+variable "create_load_balancer" {
+  type    = bool
+  default = false
+}
+
+variable "domain_suffix" {
+  description = "Used for the load balancer host rule (canto-<node-key>.<domain_suffix>)"
+  type        = string
+  default     = ""
+}
 
 locals {
   environment      = terraform.workspace
