@@ -18,6 +18,9 @@ ssh_keys = {
 }
 create_firewall_rule = true
 create_reverse_proxy = true
+create_load_balancer = true
+
+domain_suffix = "ansybl.io"
 
 # https://docs.canto.io/evm-development/quickstart-guide
 environment_to_chain_id = {

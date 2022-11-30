@@ -2,6 +2,14 @@
 
 Automates Canto validador deployment.
 
+- <https://canto-node1.ansybl.io/rpc/status>
+- <https://canto-node2.ansybl.io/rpc/status>
+
+Nodes endpoints:
+  - /api/
+  - /rpc/
+  - /evm_rpc/
+
 ## Warning
 Redeploying a validation could be subject to double signing old blocks as the validator resyncs with the chain hence be subject to slashing/jailing.
 Further investigations would be required to make sure the validator doesn't start signing until it's fully synced.

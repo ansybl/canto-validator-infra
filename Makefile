@@ -65,6 +65,11 @@ devops/terraform/destroy/validators: devops/terraform/destroy/validator1
 devops/terraform/destroy/proxies: devops/terraform/select/$(WORKSPACE)
 	terraform -chdir=terraform destroy -target=google_compute_instance.reverse_proxy -auto-approve
 
+# https://github.com/terraform-google-modules/terraform-google-lb-http/blob/v6.3.0/docs/upgrading-v2.0.0-v3.0.0.md#dealing-with-dependencies
+devops/terraform/destroy/serverless_neg: devops/terraform/select/$(WORKSPACE)
+	terraform -chdir=terraform destroy \
+	-target=google_compute_region_network_endpoint_group.serverless_neg -auto-approve
+
 devops/terraform/redeploy/nodes: devops/terraform/select/$(WORKSPACE) devops/terraform/destroy/nodes
 	make devops/terraform/apply
 
@@ -72,5 +77,8 @@ devops/terraform/redeploy/nodes: devops/terraform/select/$(WORKSPACE) devops/ter
 devops/terraform/redeploy/all: devops/terraform/select/$(WORKSPACE) devops/terraform/destroy/validators devops/terraform/destroy/nodes
 	make devops/terraform/apply
 
-devops/terraform/output/google_compute_instance_ip: devops/terraform/select/$(WORKSPACE)
-	terraform -chdir=terraform output google_compute_instance_ip
+devops/terraform/output: devops/terraform/select/$(WORKSPACE)
+	terraform -chdir=terraform output
+
+devops/terraform/output/google_compute_instance_name_ip_map: devops/terraform/select/$(WORKSPACE)
+	terraform -chdir=terraform output google_compute_instance_name_ip_map
