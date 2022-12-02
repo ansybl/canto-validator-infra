@@ -2,8 +2,7 @@
 
 Automates Canto validador deployment.
 
-- <https://canto-node1.ansybl.io/rpc/status>
-- <https://canto-node2.ansybl.io/rpc/status>
+- <https://canto-testnet.ansybl.io/rpc/status>
 
 Nodes endpoints:
   - /api/
