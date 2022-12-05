@@ -47,6 +47,12 @@ variable "tendermint_evm_rpc_port" {
   default     = 8545
 }
 
+variable "create_static_ip" {
+  description = "Create a static IP"
+  type        = bool
+  default     = false
+}
+
 variable "instance_name" {
   description = "The desired name to assign to the deployed instance"
   default = "disk-instance-vm-test"

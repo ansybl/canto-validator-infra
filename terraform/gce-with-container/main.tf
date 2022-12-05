@@ -50,7 +50,10 @@ resource "google_compute_instance" "this" {
 
   network_interface {
     network = var.network_name
-    access_config {}
+    network_ip = var.create_static_ip ? google_compute_address.static_internal.address : null
+    access_config {
+      nat_ip = var.create_static_ip ? google_compute_address.static.address : null
+    }
   }
 
   metadata = {

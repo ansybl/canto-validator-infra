@@ -23,3 +23,13 @@ data "google_secret_manager_secret_version" "priv_validator_key" {
   version    = "latest"
   depends_on = [google_project_service.secretmanager]
 }
+
+# Redeploying the same key to guarantee the same node ID.
+# This is useful to have a deterministic persistent_peers (`node-id@sentry-ip:port`) setting.
+# This is also useful to know the validator ID to fill the `private_peer_ids` setting.
+data "google_secret_manager_secret_version" "node_key" {
+  for_each   = toset(concat(var.validator_nodes, var.sentry_nodes))
+  secret     = "${var.prefix}-${each.key}-node-key-${local.environment}"
+  version    = "latest"
+  depends_on = [google_project_service.secretmanager]
+}

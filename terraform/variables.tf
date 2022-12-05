@@ -73,6 +73,12 @@ variable "validator_nodes" {
   default     = []
 }
 
+variable "sentry_nodes" {
+  description = "Slug of the sentry nodes (exposed to the public network)."
+  type        = list(string)
+  default     = []
+}
+
 variable "default_chain_id" {
   type    = string
   default = "canto_740-1"
@@ -140,7 +146,27 @@ variable "minimum_gas_prices" {
 }
 
 variable "persistent_peers" {
-  type = string
+  description = "Default persistent peers for all the nodes types, format: `nodeid@ip:port`"
+  type        = list(string)
+}
+
+
+variable "validator_persistent_peers" {
+  description = "Persistent peers for the validator nodes (most likely validators and other sentries)"
+  type        = list(string)
+  default     = []
+}
+
+variable "sentry_persistent_peers" {
+  description = "Persistent peers for the Sentry nodes (most likely validators and other sentries)"
+  type        = list(string)
+  default     = []
+}
+
+variable "private_peer_ids" {
+  description = "comma-separate list of node id values, that should not be gossiped at all times"
+  type        = list(string)
+  default     = []
 }
 
 variable "rpc_servers" {
@@ -169,9 +195,18 @@ variable "node_to_domain_map" {
 }
 
 locals {
-  environment      = terraform.workspace
-  canto_image_name = "canto-validator-${local.environment}"
-  nginx_image_name = "nginx-reverse-proxy-${local.environment}"
-  chain_id         = lookup(var.environment_to_chain_id, local.environment, var.default_chain_id)
-  all_nodes        = concat(var.validator_nodes, var.full_nodes)
+  environment          = terraform.workspace
+  canto_image_name     = "canto-validator-${local.environment}"
+  nginx_image_name     = "nginx-reverse-proxy-${local.environment}"
+  chain_id             = lookup(var.environment_to_chain_id, local.environment, var.default_chain_id)
+  all_nodes            = concat(var.validator_nodes, var.full_nodes, var.sentry_nodes)
+  validator_nodes      = [for node in var.validator_nodes : { slug = node, type = "validator" }]
+  full_nodes           = [for node in var.full_nodes : { slug = node, type = "full" }]
+  sentry_nodes         = [for node in var.sentry_nodes : { slug = node, type = "sentry" }]
+  all_nodes_with_types = concat(local.validator_nodes, local.full_nodes, local.sentry_nodes)
+  persistent_peers_by_type = {
+    validator = length(var.validator_persistent_peers) == 0 ? var.persistent_peers : var.validator_persistent_peers
+    full      = var.persistent_peers
+    sentry    = length(var.sentry_persistent_peers) == 0 ? var.persistent_peers : var.sentry_persistent_peers
+  }
 }

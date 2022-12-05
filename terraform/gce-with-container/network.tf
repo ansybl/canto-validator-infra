@@ -53,3 +53,12 @@ resource "google_compute_firewall" "allow_tag_tendermint_evm_rpc" {
     ports    = [var.tendermint_evm_rpc_port]
   }
 }
+
+resource "google_compute_address" "static" {
+  name = "${var.prefix}-${local.instance_name}-address-${var.environment}"
+}
+
+resource "google_compute_address" "static_internal" {
+  name = "${var.prefix}-${local.instance_name}-internal-address-${var.environment}"
+  address_type = "INTERNAL"
+}

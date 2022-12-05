@@ -58,9 +58,11 @@ devops/terraform/destroy/all: devops/terraform/select/$(WORKSPACE)
 devops/terraform/destroy/%: devops/terraform/select/$(WORKSPACE)
 	terraform -chdir=terraform destroy -target=module.gce_worker_container[\"$*\"].google_compute_instance.this -auto-approve
 
-devops/terraform/destroy/nodes: devops/terraform/destroy/node1 devops/terraform/destroy/node2
+devops/terraform/destroy/nodes: devops/terraform/destroy/node1
 
 devops/terraform/destroy/validators: devops/terraform/destroy/validator1
+
+devops/terraform/destroy/sentries: devops/terraform/destroy/sentry1 devops/terraform/destroy/sentry2
 
 devops/terraform/destroy/proxies: devops/terraform/select/$(WORKSPACE)
 	terraform -chdir=terraform destroy -target=google_compute_instance.reverse_proxy -auto-approve
@@ -73,8 +75,14 @@ devops/terraform/destroy/serverless_neg: devops/terraform/select/$(WORKSPACE)
 devops/terraform/redeploy/nodes: devops/terraform/select/$(WORKSPACE) devops/terraform/destroy/nodes
 	make devops/terraform/apply
 
-# redeploy the nodes & validators VM
-devops/terraform/redeploy/all: devops/terraform/select/$(WORKSPACE) devops/terraform/destroy/validators devops/terraform/destroy/nodes
+devops/terraform/redeploy/sentries: devops/terraform/select/$(WORKSPACE) devops/terraform/destroy/sentries
+	make devops/terraform/apply
+
+devops/terraform/redeploy/validators: devops/terraform/select/$(WORKSPACE) devops/terraform/destroy/validators
+	make devops/terraform/apply
+
+# redeploy the nodes, sentries and validators VM
+devops/terraform/redeploy/all: devops/terraform/select/$(WORKSPACE) devops/terraform/destroy/validators devops/terraform/destroy/nodes devops/terraform/destroy/sentries
 	make devops/terraform/apply
 
 devops/terraform/output: devops/terraform/select/$(WORKSPACE)
