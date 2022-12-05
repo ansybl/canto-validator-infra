@@ -18,7 +18,7 @@ resource "google_compute_url_map" "this" {
   dynamic "host_rule" {
     for_each = var.full_nodes
     content {
-      hosts        = ["canto-${host_rule.value}.${var.domain_suffix}"]
+      hosts        = ["${lookup(var.node_to_domain_map, host_rule.value, host_rule.value)}.${var.domain_suffix}"]
       path_matcher = "path-matcher-${host_rule.value}"
     }
   }

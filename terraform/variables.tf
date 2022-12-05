@@ -162,6 +162,12 @@ variable "domain_suffix" {
   default     = ""
 }
 
+variable "node_to_domain_map" {
+  description = "Used to map the domain that should be associated to the full node"
+  type        = map(string)
+  default     = {}
+}
+
 locals {
   environment      = terraform.workspace
   canto_image_name = "canto-validator-${local.environment}"
