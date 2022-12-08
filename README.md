@@ -1,6 +1,6 @@
 # Canto Validator Infra
 
-Automates Canto validador deployment.
+Automates Canto validadors, full nodes and sentry nodes deployment.
 
 - <https://canto-testnet.ansybl.io/rpc/status>
 

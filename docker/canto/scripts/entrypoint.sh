@@ -15,7 +15,7 @@ write_app_toml() {
     envsubst < "$CANTOD_HOME/config/app.template.toml" > app.toml
 }
 
-import_keys() {
+import_validator_keys() {
     # non validator would not have these variables set
     if [[ -z "$PRIV_VALIDATOR_KEY" ]]; then
         return
@@ -29,6 +29,14 @@ $PASSPHRASE
 EOF
     rm $KEYFILE_PATH
     echo -e $PRIV_VALIDATOR_KEY > $CANTOD_HOME/${PRIV_VALIDATOR_KEY_FILE:-config/priv_validator_key.json}
+}
+
+# importing the node_key.json to have a deterministic node ID
+import_node_key() {
+    if [[ -z "$NODE_KEY" ]]; then
+        return
+    fi
+    echo -e $NODE_KEY > $CANTOD_HOME/${NODE_KEY_FILE:-config/node_key.json}
 }
 
 # retrieve and set trust height/height automatically if STATE_SYNC_ENABLE=true and TRUST_HEIGHT=0
@@ -120,7 +128,8 @@ add_system_dependencies() {
 initialize "$CANTOD_HOME" cantod
 set_trusted_block
 update_config_files "$CANTOD_HOME/config"
-import_keys
+import_validator_keys
+import_node_key
 add_system_dependencies $ADDITIONAL_DEPENDENCIES
 cd "$CANTOD_HOME"
 exec supervisord --nodaemon --configuration /etc/supervisord.conf
