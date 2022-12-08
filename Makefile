@@ -6,6 +6,20 @@ CANTO_IMAGE_NAME=canto-validator-$(WORKSPACE)
 CANTO_DOCKER_IMAGE=$(REGISTRY)/$(CANTO_IMAGE_NAME)
 NGINX_IMAGE_NAME=nginx-reverse-proxy-$(WORKSPACE)
 NGINX_DOCKER_IMAGE=$(REGISTRY)/$(NGINX_IMAGE_NAME)
+DIAGRAMS_DIR=diagrams
+VIRTUAL_ENV ?= $(DIAGRAMS_DIR)/venv
+REQUIREMENTS=$(DIAGRAMS_DIR)/requirements.txt
+PIP=$(VIRTUAL_ENV)/bin/pip
+PYTHON=$(VIRTUAL_ENV)/bin/python
+ISORT=$(VIRTUAL_ENV)/bin/isort
+FLAKE8=$(VIRTUAL_ENV)/bin/flake8
+BLACK=$(VIRTUAL_ENV)/bin/black
+PYTHON_MAJOR_VERSION=3
+PYTHON_MINOR_VERSION=10
+PYTHON_VERSION=$(PYTHON_MAJOR_VERSION).$(PYTHON_MINOR_VERSION)
+PYTHON_MAJOR_MINOR=$(PYTHON_MAJOR_VERSION)$(PYTHON_MINOR_VERSION)
+PYTHON_WITH_VERSION=python$(PYTHON_VERSION)
+SOURCES=diagrams/
 ifndef CI
 DOCKER_IT=-it
 endif
@@ -90,3 +104,31 @@ devops/terraform/output: devops/terraform/select/$(WORKSPACE)
 
 devops/terraform/output/google_compute_instance_name_ip_map: devops/terraform/select/$(WORKSPACE)
 	terraform -chdir=terraform output google_compute_instance_name_ip_map
+
+$(VIRTUAL_ENV):
+	$(PYTHON_WITH_VERSION) -m venv $(VIRTUAL_ENV)
+	$(PIP) install -r $(REQUIREMENTS)
+
+virtualenv: $(VIRTUAL_ENV)
+
+diagrams/run: $(VIRTUAL_ENV)
+	cd $(DIAGRAMS_DIR) && ../$(PYTHON) diagram.py
+
+diagrams/lint/isort: $(VIRTUAL_ENV)
+	$(ISORT) --check-only --diff $(SOURCES)
+
+diagrams/lint/flake8: $(VIRTUAL_ENV)
+	$(FLAKE8) --config $(DIAGRAMS_DIR)/setup.cfg $(SOURCES)
+
+diagrams/lint/black: $(VIRTUAL_ENV)
+	$(BLACK) --check $(SOURCES)
+
+diagrams/format/isort: $(VIRTUAL_ENV)
+	$(ISORT) $(SOURCES)
+
+diagrams/format/black: $(VIRTUAL_ENV)
+	$(BLACK) --verbose $(SOURCES)
+
+diagrams/lint: diagrams/lint/isort diagrams/lint/flake8 diagrams/lint/black
+
+diagrams/format: diagrams/format/isort diagrams/format/black
