@@ -1,0 +1,4 @@
+black
+diagrams
+flake8
+isort

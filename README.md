@@ -4,10 +4,17 @@ Automates Canto validadors, full nodes and sentry nodes deployment.
 
 - <https://canto-testnet.ansybl.io/rpc/status>
 
-Nodes endpoints:
+Full nodes endpoints:
   - /api/
   - /rpc/
   - /evm_rpc/
+
+## Architecture
+Full nodes:
+![full nodes](https://github.com/ansybl/canto-validator-infra/raw/main/diagrams/full_nodes.png)
+
+Validators:
+![validators](https://github.com/ansybl/canto-validator-infra/raw/main/diagrams/validators.png)
 
 ## Warning
 Redeploying a validation could be subject to double signing old blocks as the validator resyncs with the chain hence be subject to slashing/jailing.
