@@ -50,8 +50,23 @@ docker/run:
 docker/run/sh:
 	docker run $(DOCKER_IT) --entrypoint /bin/sh --rm $(CANTO_DOCKER_IMAGE)
 
+# generate the keys to be exported to Secret Manager
+docker/run/init-keys:
+	docker run $(DOCKER_IT) --entrypoint /bin/sh --rm $(CANTO_DOCKER_IMAGE) -c ' \
+	cantod init moniker --chain-id canto_740-1 &> /dev/null && \
+	echo -e "\n\nnode_key.json" && \
+	cat ~/.cantod/config/node_key.json && \
+	echo -e "\n\npriv_validator_key.json" && \
+	cat ~/.cantod/config/priv_validator_key.json && \
+	cantod keys add main && \
+	cantod keys export main \
+	'
+
 devops/terraform/select/%:
 	terraform -chdir=terraform workspace select $* || terraform -chdir=terraform workspace new $*
+
+devops/terraform/list:
+	terraform -chdir=terraform workspace list
 
 devops/terraform/fmt:
 	terraform -chdir=terraform fmt

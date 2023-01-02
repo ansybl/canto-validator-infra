@@ -38,3 +38,9 @@ make devops/terraform/apply
 
 We leverage [Terraform workspaces](https://developer.hashicorp.com/terraform/language/state/workspaces) to handle state data instance separation.
 In our setup the `WORKSPACE` matches with the network (e.g. `testnet`, `mainnet`), but can also be used to stand up a dedicated dev instance (e.g. `testnet-andre`).
+
+## Key generation
+Deploying a node or a validator requires a set of keys available in Secret Manager and pregenerated via:
+```sh
+make docker/run/init-keys
+```

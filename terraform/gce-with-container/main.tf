@@ -33,7 +33,6 @@ module "gce-container" {
 ##### COMPUTE ENGINE
 
 resource "google_compute_instance" "this" {
-  # TODO
   name = "${var.prefix}-${local.instance_name}-${var.environment}"
   machine_type = var.machine_type
   # If true, allows Terraform to stop the instance to update its properties.
