@@ -24,8 +24,9 @@ variable "zone" {
 
 ## validator variables
 
-variable "machine_type" {
-  type = string
+variable "machine_types" {
+  description = "Per node type machine type"
+  type        = map(string)
 }
 
 variable "prefix" {
@@ -170,7 +171,7 @@ variable "private_peer_ids" {
 }
 
 variable "rpc_servers" {
-  type = string
+  type = list(string)
 }
 
 variable "additional_dependencies" {

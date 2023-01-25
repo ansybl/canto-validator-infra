@@ -69,7 +69,7 @@ devops/terraform/list:
 	terraform -chdir=terraform workspace list
 
 devops/terraform/fmt:
-	terraform -chdir=terraform fmt
+	terraform -chdir=terraform fmt -recursive
 
 devops/terraform/init:
 	terraform -chdir=terraform init -reconfigure

@@ -4,7 +4,7 @@ variable "prefix" {
 }
 
 variable "environment" {
-  type        = string
+  type = string
 }
 
 variable "network_name" {
@@ -13,7 +13,7 @@ variable "network_name" {
 
 variable "vm_tags" {
   description = "Additional network tags for the instances."
-  type = list(string)
+  type        = list(string)
   default     = []
 }
 
@@ -55,7 +55,7 @@ variable "create_static_ip" {
 
 variable "instance_name" {
   description = "The desired name to assign to the deployed instance"
-  default = "disk-instance-vm-test"
+  default     = "disk-instance-vm-test"
 }
 
 variable "image" {
@@ -63,12 +63,12 @@ variable "image" {
 }
 
 variable "env_variables" {
-  type = map(string)
+  type    = map(string)
   default = null
 }
 
 variable "privileged_mode" {
-  type = bool
+  type    = bool
   default = false
 }
 
@@ -79,7 +79,7 @@ variable "privileged_mode" {
 # e2-small / 2 / 2.00
 # g1-small / 1 / 1.70
 variable "machine_type" {
-  type = string
+  type    = string
   default = "f1-micro"
 }
 
@@ -88,23 +88,23 @@ variable "ssh_keys" {
 }
 
 variable "activate_tty" {
-  type = bool
+  type    = bool
   default = false
 }
 
 variable "custom_command" {
-  type = list(string)
+  type    = list(string)
   default = null
 }
 
 variable "additional_metadata" {
-  type = map(string)
+  type        = map(string)
   description = "Additional metadata to attach to the instance"
-  default = null
+  default     = null
 }
 
 variable "client_email" {
   description = "Service account email address"
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
