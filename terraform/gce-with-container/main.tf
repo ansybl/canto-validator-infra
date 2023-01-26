@@ -3,7 +3,7 @@ locals {
   instance_name = format("%s-%s", var.instance_name, substr(md5(module.gce-container.container.image), 0, 8))
 
   env_variables = [for var_name, var_value in var.env_variables : {
-    name = var_name
+    name  = var_name
     value = var_value
   }]
 }
@@ -13,13 +13,13 @@ locals {
 
 module "gce-container" {
   # https://github.com/terraform-google-modules/terraform-google-container-vm
-  source = "terraform-google-modules/container-vm/google"
+  source  = "terraform-google-modules/container-vm/google"
   version = "3.1.0"
 
   container = {
-    image = var.image
+    image   = var.image
     command = var.custom_command
-    env = local.env_variables
+    env     = local.env_variables
     securityContext = {
       privileged : var.privileged_mode
     }
@@ -33,7 +33,7 @@ module "gce-container" {
 ##### COMPUTE ENGINE
 
 resource "google_compute_instance" "this" {
-  name = "${var.prefix}-${local.instance_name}-${var.environment}"
+  name         = "${var.prefix}-${local.instance_name}-${var.environment}"
   machine_type = var.machine_type
   # If true, allows Terraform to stop the instance to update its properties.
   allow_stopping_for_update = true
@@ -42,13 +42,13 @@ resource "google_compute_instance" "this" {
   boot_disk {
     initialize_params {
       image = module.gce-container.source_image
-      size = 100
-      type = "pd-balanced"
+      size  = 100
+      type  = "pd-balanced"
     }
   }
 
   network_interface {
-    network = var.network_name
+    network    = var.network_name
     network_ip = var.create_static_ip ? google_compute_address.static_internal.address : null
     access_config {
       nat_ip = var.create_static_ip ? google_compute_address.static.address : null
@@ -57,7 +57,7 @@ resource "google_compute_instance" "this" {
 
   metadata = {
     gce-container-declaration = module.gce-container.metadata_value
-    ssh-keys = join("\n", [for user, key in var.ssh_keys : "${user}:${key}"])
+    ssh-keys                  = join("\n", [for user, key in var.ssh_keys : "${user}:${key}"])
   }
 
   labels = {

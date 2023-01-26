@@ -41,7 +41,7 @@ module "gce_worker_container" {
   image           = "gcr.io/${var.project}/${local.canto_image_name}:${var.image_tag}"
   privileged_mode = true
   activate_tty    = true
-  machine_type    = var.machine_type
+  machine_type    = var.machine_types[each.value.type]
   prefix          = var.prefix
   environment     = local.environment
   env_variables = {
@@ -54,7 +54,7 @@ module "gce_worker_container" {
     CHAIN_ID                = local.chain_id
     PERSISTENT_PEERS        = join(",", local.persistent_peers_by_type[each.value.type])
     PRIVATE_PEER_IDS        = join(",", var.private_peer_ids)
-    RPC_SERVERS             = var.rpc_servers
+    RPC_SERVERS             = join(",", var.rpc_servers)
     ADDITIONAL_DEPENDENCIES = var.additional_dependencies
     TENDERMINT_KEYFILE      = each.value.type == "validator" ? replace(data.google_secret_manager_secret_version.tendermint_keyfile[each.key].secret_data, "\n", "\\n") : ""
     PASSPHRASE              = each.value.type == "validator" ? data.google_secret_manager_secret_version.passphrase[each.key].secret_data : ""
@@ -66,8 +66,8 @@ module "gce_worker_container" {
     ADDR_BOOK_STRICT = contains(["sentry", "validator"], each.value.type) ? false : true
     # disable the peer exchange for validators
     PEX         = each.value.type != "validator"
-    API         = each.value.type == "full" ? "true" : "false"
-    UNSAFE_CORS = each.value.type == "full" ? "true" : "false"
+    API         = each.value.type == "full"
+    UNSAFE_CORS = each.value.type == "full"
     API_PORT    = var.tendermint_api_port
     P2P_PORT    = var.tendermint_p2p_port
     RPC_PORT    = var.tendermint_rpc_port

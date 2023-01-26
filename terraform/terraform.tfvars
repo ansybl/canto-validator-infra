@@ -9,7 +9,11 @@ zone    = "us-east5-a"
 
 ## Validator setup
 # gcloud compute machine-types list
-machine_type    = "e2-standard-4"
+machine_types = {
+  validator = "e2-standard-2"
+  full      = "e2-standard-2"
+  sentry    = "e2-standard-2"
+}
 prefix          = "canto-validator"
 validator_nodes = ["validator1"]
 full_nodes      = ["node1"]
@@ -52,6 +56,10 @@ private_peer_ids = [
 ]
 # Overriding the default to remove p2p since we're going through Sentry nodes
 # which will connect via the VPC internal IPs which isn't firewalled.
-validators_vm_tags      = []
-rpc_servers             = "147.182.255.149:26657,147.182.255.149:26657"
+validators_vm_tags = []
+# TODO: also use our public RPC servers, not only the Plex one
+rpc_servers = [
+  "147.182.255.149:26657",
+  "147.182.255.149:26657",
+]
 additional_dependencies = "jq tmux vim"
