@@ -57,6 +57,8 @@ resource "google_compute_instance" "this" {
 
   metadata = {
     gce-container-declaration = module.gce-container.metadata_value
+    google-logging-enabled    = var.enable_gcp_logging
+    google-monitoring-enabled = var.enable_gcp_monitoring
     ssh-keys                  = join("\n", [for user, key in var.ssh_keys : "${user}:${key}"])
   }
 

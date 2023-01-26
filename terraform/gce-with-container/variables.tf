@@ -17,6 +17,18 @@ variable "vm_tags" {
   default     = []
 }
 
+variable "enable_gcp_logging" {
+  description = "Enable the Google logging agent."
+  type        = bool
+  default     = true
+}
+
+variable "enable_gcp_monitoring" {
+  description = "Enable the Google monitoring agent."
+  type        = bool
+  default     = true
+}
+
 variable "create_firewall_rule" {
   description = "Create tag-based firewall rule."
   type        = bool
