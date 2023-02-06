@@ -60,6 +60,7 @@ module "gce_worker_container" {
     PASSPHRASE              = each.value.type == "validator" ? data.google_secret_manager_secret_version.passphrase[each.key].secret_data : ""
     PRIV_VALIDATOR_KEY      = each.value.type == "validator" ? replace(data.google_secret_manager_secret_version.priv_validator_key[each.key].secret_data, "\n", "\\n") : ""
     NODE_KEY                = contains(["sentry", "validator"], each.value.type) ? replace(data.google_secret_manager_secret_version.node_key[each.key].secret_data, "\n", "\\n") : ""
+    PROMETHEUS              = var.enable_tendermint_prometheus
     # Turn this off for the nodes that are on a LAN IP.
     # By default, only nodes with a routable address will be considered for connection.
     # If this setting is turned off, non-routable IP addresses, like addresses in a private network, can be added to the address book.
@@ -74,8 +75,9 @@ module "gce_worker_container" {
   }
   instance_name = each.value.slug
   network_name  = "default"
-  # sentry nodes should have a deterministic IP so validators don't have to update it every now and then
-  create_static_ip        = each.value.type == "sentry"
+  # we often use the internal static IP for unfirewalled communications within the VPC e.g.
+  # validators to sentry p2p connection, exposed prometheus metrics...
+  create_static_ip        = true
   create_firewall_rule    = var.create_firewall_rule
   tendermint_api_port     = var.tendermint_api_port
   tendermint_p2p_port     = var.tendermint_p2p_port

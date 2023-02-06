@@ -53,13 +53,13 @@ variable "create_firewall_rule" {
 variable "nodes_vm_tags" {
   description = "Additional network tags for the nodes instances."
   type        = list(string)
-  default     = ["tendermint-p2p", "tendermint-api", "tendermint-rpc", "tendermint-evm-rpc"]
+  default     = ["tendermint-p2p", "tendermint-api", "tendermint-rpc", "tendermint-evm-rpc", "tendermint-prometheus"]
 }
 
 variable "validators_vm_tags" {
   description = "Additional network tags for the validators instances."
   type        = list(string)
-  default     = ["tendermint-p2p"]
+  default     = ["tendermint-p2p", "tendermint-prometheus"]
 }
 
 variable "full_nodes" {
@@ -193,6 +193,12 @@ variable "node_to_domain_map" {
   description = "Used to map the domain that should be associated to the full node"
   type        = map(string)
   default     = {}
+}
+
+variable "enable_tendermint_prometheus" {
+  description = "Enable Prometheus exporter for Tendermint."
+  type        = bool
+  default     = false
 }
 
 locals {

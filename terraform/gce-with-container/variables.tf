@@ -59,6 +59,12 @@ variable "tendermint_evm_rpc_port" {
   default     = 8545
 }
 
+variable "tendermint_prometheus_port" {
+  description = "Port for exposing the Prometheus exporter"
+  type        = number
+  default     = 26660
+}
+
 variable "create_static_ip" {
   description = "Create a static IP"
   type        = bool

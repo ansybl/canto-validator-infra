@@ -54,6 +54,20 @@ resource "google_compute_firewall" "allow_tag_tendermint_evm_rpc" {
   }
 }
 
+resource "google_compute_firewall" "allow_tag_tendermint_prometheus" {
+  count         = var.create_firewall_rule ? 1 : 0
+  name          = "${var.prefix}-${local.instance_name}-ingress-tag-prom-${var.environment}"
+  description   = "Ingress to allow Tendermint Prometheus port to machines with the 'tendermint-prometheus' tag"
+  network       = var.network_name
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["tendermint-prometheus"]
+
+  allow {
+    protocol = "tcp"
+    ports    = [var.tendermint_prometheus_port]
+  }
+}
+
 resource "google_compute_address" "static" {
   name = "${var.prefix}-${local.instance_name}-address-${var.environment}"
 }
