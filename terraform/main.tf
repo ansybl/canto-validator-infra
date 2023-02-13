@@ -64,14 +64,19 @@ module "gce_worker_container" {
     # Turn this off for the nodes that are on a LAN IP.
     # By default, only nodes with a routable address will be considered for connection.
     # If this setting is turned off, non-routable IP addresses, like addresses in a private network, can be added to the address book.
-    ADDR_BOOK_STRICT = contains(["sentry", "validator"], each.value.type) ? false : true
+    ADDR_BOOK_STRICT = !contains(["sentry", "validator"], each.value.type)
     # disable the peer exchange for validators
-    PEX         = each.value.type != "validator"
-    API         = each.value.type == "full"
-    UNSAFE_CORS = each.value.type == "full"
-    API_PORT    = var.tendermint_api_port
-    P2P_PORT    = var.tendermint_p2p_port
-    RPC_PORT    = var.tendermint_rpc_port
+    PEX = each.value.type != "validator"
+    # while the validator has the API enabled for metrics, it's only exposed through the VPC
+    # since it doesn't (and shouldn't) contain the `tendermint-api` tag
+    API                           = contains(["full", "validator"], each.value.type)
+    SWAGGER                       = contains(["full", "validator"], each.value.type)
+    APP_TELEMETRY                 = contains(["full", "validator"], each.value.type)
+    APP_PROMETHEUS_RETENTION_TIME = contains(["full", "validator"], each.value.type) ? 60 : 0
+    UNSAFE_CORS                   = each.value.type == "full"
+    API_PORT                      = var.tendermint_api_port
+    P2P_PORT                      = var.tendermint_p2p_port
+    RPC_PORT                      = var.tendermint_rpc_port
   }
   instance_name = each.value.slug
   network_name  = "default"
