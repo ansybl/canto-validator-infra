@@ -1,6 +1,7 @@
 resource "google_project_service" "secretmanager" {
   provider = google
   service  = "secretmanager.googleapis.com"
+  disable_on_destroy = false
 }
 
 # imported via:
